@@ -1,9 +1,639 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>Empty Page</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>KID-IA | Innovando por un mundo más inclusivo</title>
+<meta name="description" content="KID-IA: IA educativa con actividades y reportes para TEA." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* Paleta KID-IA */
+    --blue: #0A56B5;
+    --blue-2:#08489a;
+    --blue-3:#0c6cf0;
+    --ink:  #0f172a;
+    --muted:#6b7280;
+    --glass:#ffffffcc;
+    --card:#ffffff;
+    --accent:#FFD166;         /* dorado suave */
+    --radius:20px;
+    --shadow:0 16px 50px rgba(10,86,181,.18);
+  }
+
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{
+    font-family:"Plus Jakarta Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial;
+    color:var(--ink);
+    background: radial-gradient(1200px 800px at 10% -10%, #e9f1ff, transparent),
+                radial-gradient(900px 700px at 110% 10%, #eaf4ff, transparent),
+                linear-gradient(180deg,#f7faff 0%,#f2f7ff 100%);
+    overflow-x:hidden;
+  }
+
+  /* BACKGROUND ANIMATED GRADIENT */
+  .bg-anim{
+    position:fixed; inset:-10vmax; z-index:-2; filter:blur(60px); opacity:.65;
+    background:
+      radial-gradient(40vmax 30vmax at 15% 20%, #7ab0ff66, transparent 60%),
+      radial-gradient(35vmax 25vmax at 85% 0%, #8cc5ff55, transparent 60%),
+      radial-gradient(30vmax 35vmax at 60% 90%, #6ed3f588, transparent 60%),
+      radial-gradient(30vmax 30vmax at 0% 100%, #8ab6ff66, transparent 60%);
+    animation: floatBg 24s ease-in-out infinite alternate;
+  }
+  @keyframes floatBg{
+    0%   {transform:translate3d(0,0,0) scale(1)}
+    50%  {transform:translate3d(-3vmax,2vmax,0) scale(1.03)}
+    100% {transform:translate3d(3vmax,-2vmax,0) scale(1.06)}
+  }
+
+  /* UTILS */
+  .container{width:min(1160px,92%); margin-inline:auto}
+  .section{padding:90px 0}
+  .grid{display:grid; gap:22px}
+  .btn{display:inline-flex; align-items:center; gap:.6rem; padding:14px 20px; border-radius:14px; font-weight:800; border:0; cursor:pointer; text-decoration:none; transition:transform .15s, box-shadow .2s}
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{color:#fff; background:linear-gradient(135deg,var(--blue) 0%, var(--blue-3) 100%); box-shadow:0 12px 28px rgba(12,108,240,.35)}
+  .btn-ghost{background:#fff; color:var(--blue); border:1px solid #e5edff}
+  .chip{display:inline-flex; gap:.5rem; align-items:center; padding:6px 10px; border-radius:999px; background:#eaf2ff; color:var(--blue); font-weight:700; font-size:.85rem}
+
+  /* NAV */
+  header{position:sticky; top:0; z-index:50; backdrop-filter:saturate(160%) blur(14px); background:rgba(255,255,255,.6); border-bottom:1px solid #e6eeff}
+  nav{display:flex; align-items:center; justify-content:space-between; padding:14px 0}
+  .brand{display:flex; align-items:center; gap:12px; font-weight:900; letter-spacing:.2px; color:var(--blue); text-decoration:none}
+  .brand img{height:34px; width:auto}
+  .nav-links{display:flex; gap:22px; align-items:center}
+  .nav-links a{font-weight:700; color:var(--ink); text-decoration:none}
+  .nav-links a:hover{color:var(--blue)}
+
+  /* HERO */
+  .hero{padding:72px 0 40px}
+  .hero-wrap{display:grid; grid-template-columns:1.1fr .9fr; gap:34px; align-items:center}
+  .h1{font-size:clamp(42px,6vw,74px); line-height:1.02; letter-spacing:-.02em; margin:10px 0}
+  .lead{font-size:1.14rem; color:var(--muted)}
+  .glass{
+    background:linear-gradient(180deg, var(--glass), #ffffffa6);
+    border:1px solid rgba(255,255,255,.35);
+    box-shadow:var(--shadow);
+    border-radius:var(--radius);
+  }
+
+  /* Parallax blobs */
+  .blob{position:absolute; border-radius:50%; filter:blur(20px); opacity:.6; pointer-events:none}
+  .blob.b1{width:240px;height:240px;background:#8cc5ff; right:-40px; top:-20px}
+  .blob.b2{width:160px;height:160px;background:#a7f3d0; left:-30px; bottom:-30px}
+  .blob.b3{width:120px;height:120px;background:#ffd166; left:40%; top:-40px; opacity:.5}
+
+  .hero-card{position:relative; padding:26px}
+  .hero-card img.logo{height:58px; margin-bottom:10px; filter:drop-shadow(0 10px 14px rgba(10,86,181,.25))}
+  .hero-ill{width:100%; height:auto; display:block; object-fit:contain; margin-top:4px}
+
+  .award{display:inline-flex; gap:.5rem; align-items:center; background:#fff; padding:10px 12px; border:1px solid #ebefff; border-radius:12px; margin-top:14px}
+  .award b{color:#111827}
+
+  /* FEATURES */
+  .features .grid{grid-template-columns:repeat(3,1fr)}
+  .feature{padding:22px; border:1px solid #eaf0ff; backdrop-filter:blur(6px)}
+  .icon{width:52px;height:52px;border-radius:14px;display:grid;place-items:center;color:#fff;
+        background:linear-gradient(140deg,var(--blue) 0%, var(--blue-3) 100%); box-shadow:0 10px 20px rgba(10,86,181,.25)}
+
+  /* HOW */
+  .how .grid{grid-template-columns:repeat(3,1fr)}
+  .step{padding:22px; border:1px dashed #dfe7ff}
+
+  /* MODULES */
+  .modules .grid{grid-template-columns:repeat(4,1fr)}
+  .pill{padding:18px; border:1px solid #e9edff}
+
+  /* PRICING */
+  .pricing .grid{grid-template-columns:repeat(3,1fr)}
+  .plan{padding:22px; border:1px solid #e8ecf9; position:relative}
+  .badge{position:absolute; right:18px; top:18px; background:linear-gradient(135deg,var(--blue),var(--blue-3)); color:#fff; padding:6px 10px; border-radius:999px; font-size:.72rem; letter-spacing:.08em}
+
+  /* TESTIMONIALS */
+  .testi .grid{grid-template-columns:repeat(3,1fr)}
+  .quote{padding:20px; border:1px solid #eef; display:grid; gap:10px}
+  .stars{color:#f59e0b}
+  .brands{margin-top:16px; display:flex; gap:14px; align-items:center}
+    .brands img{
+    width:46px; height:46px; border-radius:50%;
+    background:#fff; padding:8px; border:1px solid #e6eeff;
+    box-shadow:0 6px 18px rgba(10,86,181,.12); object-fit:contain;
+    filter:grayscale(10%); transition:filter .2s
+    }
+    .brands img:hover{filter:none}
+    .brand img,
+.hero-card img.logo {
+  width: 48px;           /* tamaño del logo */
+  height: 48px;
+  border-radius: 50%;    /* lo hace circular */
+  object-fit: cover;     /* recorta si no es cuadrado */
+  background-color: #fff;
+  border: 2px solid #e6eeff;  /* borde suave */
+  box-shadow: 0 4px 12px rgba(10,86,181,.15); /* sutil brillo */
+  transition: transform .25s ease;
+}
+
+.brand img:hover {
+  transform: scale(1.08); /* efecto suave al pasar el mouse */
+}
+
+
+
+  /* CTA */
+  .cta .inner{display:grid; grid-template-columns:1.05fr .95fr; gap:24px; color:#fff;
+              background:linear-gradient(120deg, var(--blue) 0%, var(--blue-3) 100%); padding:30px; border-radius:26px}
+
+  /* REVEAL animation */
+  .reveal{opacity:0; transform:translateY(24px) scale(.98); filter:blur(6px); transition:opacity .6s ease, transform .6s ease, filter .6s ease}
+  .reveal.show{opacity:1; transform:none; filter:none}
+
+  /* RESPONSIVE */
+  @media (max-width: 980px){
+    .hero-wrap,.cta .inner{grid-template-columns:1fr}
+    .features .grid,.how .grid,.modules .grid,.pricing .grid,.testi .grid{grid-template-columns:1fr}
+  }
+  /* ===== MÓDULOS (cards estilo app) ===== */
+.modules .grid{
+  grid-template-columns: repeat(2, 1fr);
+  gap: 22px;
+}
+.module-card{
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 18px 18px 16px;
+  background: #fff;
+  border: 2px solid #0A56B5;
+  border-radius: 18px;
+  box-shadow: 0 10px 24px rgba(10,86,181,.10);
+  transition: transform .15s ease, box-shadow .2s ease;
+}
+.module-card:hover{
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px rgba(10,86,181,.18);
+}
+.module-icon{
+  width: 56px; height: 56px; flex: 0 0 56px;
+  border-radius: 14px;
+  display: grid; place-items: center;
+  background: #f4f8ff;
+  border: 1px solid #e6eeff;
+}
+.module-icon img{
+  width: 40px; height: 40px; object-fit: contain;
+}
+.module-info h4{
+  margin: 0; font-size: 20px; font-weight: 800; color:#0f172a;
+}
+.module-info p{
+  margin: 4px 0 0; color:#6b7280; font-size: 14px;
+}
+.ia-badge{
+  position: absolute; right: -8px; top: -10px;
+  width: 42px; height: 42px; border-radius: 50%;
+  display: grid; place-items: center; color:#fff; font-weight: 800;
+  box-shadow: 0 8px 16px rgba(0,0,0,.12);
+  border: 3px solid #fff;
+  background: linear-gradient(135deg, #24c08d, #0fb37a);
+}
+@media (max-width: 720px){
+  .modules .grid{ grid-template-columns: 1fr; }
+}
+/* ====== MOBILE TUNING ====== */
+@media (max-width: 600px){
+
+  /* contenedor y secciones más compactos */
+  .container{ width: 94%; }
+  .section{ padding: 56px 0; }
+
+  /* NAV: logo compacto y links desplazables */
+  .brand{ gap:10px; }
+  .brand img{ height:28px; width:28px; }
+  .brand span{ font-size:16px; font-weight:800; }
+  .nav-links{
+    gap:12px;
+    flex-wrap: nowrap;
+    overflow-x: auto;           /* scroll horizontal si no caben */
+    -webkit-overflow-scrolling: touch;
+  }
+  .nav-links a{ font-size:14px; white-space: nowrap; }
+
+  /* HERO: 1 columna, centrado y botones en bloque */
+  .hero{ padding: 36px 0 14px; }
+  .hero-wrap{ grid-template-columns:1fr; gap:18px; }
+  .hero .reveal{ text-align:center; }
+  .h1{ font-size: clamp(28px, 7vw, 40px); }
+  .lead{ font-size: 15px; }
+  .hero .reveal .btn{ width:100%; justify-content:center; }  /* botones full width */
+  .hero .award{ margin-inline:auto; font-size:14px; padding:8px 10px; }
+
+  .hero-card{ padding:16px; }
+  .hero-ill{ max-height: 260px; margin-top: 0; }
+  .blob.b1{ width:180px; height:180px; right:-24px; top:-16px; }
+  .blob.b2{ width:120px; height:120px; left:-18px; bottom:-18px; }
+  .blob.b3{ width:100px; height:100px; top:-24px; }
+
+  /* FEATURES / HOW / PRICING / TESTI ya se van a 1 columna con tu media 980,
+     aquí solo ajustamos tipografías y paddings */
+  .feature, .step, .plan, .quote{ padding:16px; }
+
+  /* MÓDULOS: cards cómodas al tacto */
+  .modules .grid{ grid-template-columns:1fr; gap:16px; }
+  .module-card{ padding:16px; gap:12px; }
+  .module-icon{ width:52px; height:52px; border-radius:12px; }
+  .module-icon img{ width:36px; height:36px; }
+  .module-info h4{ font-size:18px; }
+  .module-info p{ font-size:13px; }
+  .ia-badge{ right:-6px; top:-8px; width:38px; height:38px; border-width:2px; }
+
+  /* CTA */
+  .cta .inner{ grid-template-columns:1fr; gap:16px; padding:20px; border-radius:20px; }
+  .cta .inner .btn{ width:100%; }
+
+  /* FOOTER */
+  footer .container{ grid-template-columns:1fr; gap:12px; text-align:center; }
+}
+
+/* Extra mini-breakpoint para pantallas MUY estrechas */
+@media (max-width: 380px){
+  .nav-links a{ font-size:13px; }
+  .brand span{ display:none; }    /* oculta texto al lado del logo para ganar espacio */
+}
+/* Desktop: botón oculto */
+.hamburger{ display:none; }
+
+/* ===== Menú móvil desplegable ===== */
+@media (max-width: 600px){
+  /* botón hamburger */
+  .hamburger{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:40px; height:40px; border:none; background:transparent; cursor:pointer;
+    border-radius:10px;
+  }
+  .hamburger span{
+    width:22px; height:2.5px; background:#0A56B5; display:block;
+    margin:3.5px 0; border-radius:2px; transition:transform .25s, opacity .2s;
+  }
+  /* contenedor links como dropdown */
+  header { position: sticky; top:0; }
+  nav { position: relative; }
+
+  .nav-links{
+    position:absolute; right:0; top:56px;
+    background:#fff; border:1px solid #e6eeff; border-radius:14px;
+    box-shadow:0 14px 28px rgba(10,86,181,.15);
+    padding:10px; width:min(86vw, 300px);
+    display:flex; flex-direction:column; gap:6px;
+
+    /* oculto por defecto */
+    max-height:0; overflow:hidden; opacity:0; pointer-events:none;
+    transform: translateY(-6px);
+    transition:max-height .25s ease, opacity .2s ease, transform .2s ease;
+  }
+  .nav-links a{ display:block; padding:10px 8px; white-space:nowrap; }
+  .nav-links .btn{ width:100%; justify-content:center; }
+
+  /* visible cuando header tiene .open */
+  header.open .nav-links{
+    max-height:480px; opacity:1; pointer-events:auto; transform:none;
+  }
+
+  /* animación del ícono en estado abierto */
+  header.open .hamburger span:nth-child(1){ transform: translateY(6px) rotate(45deg); }
+  header.open .hamburger span:nth-child(2){ opacity:0; }
+  header.open .hamburger span:nth-child(3){ transform: translateY(-6px) rotate(-45deg); }
+
+  /* quitamos el scroll horizontal que tenías en móvil */
+  .nav-links{ overflow-x:hidden; }
+}
+
+
+</style>
 </head>
 <body>
+
+<div class="bg-anim" aria-hidden="true"></div>
+
+<!-- NAV -->
+<header class="reveal show">
+  <div class="container">
+    <nav>
+      <a class="brand" href="#">
+  <img src="assets/kidia-logo.png" alt="KID-IA" />
+  <span>KID IA</span>
+</a>
+
+<button class="hamburger" id="menuBtn" aria-label="Abrir menú">
+  <span></span><span></span><span></span>
+</button>
+
+<div class="nav-links" id="menuLinks">
+  <a href="#features">Beneficios</a>
+  <a href="#how">Cómo funciona</a>
+  <a href="#modules">Terapias</a>
+  <a href="#pricing">Planes</a>
+  <a class="btn btn-primary" href="#cta">Comenzar</a>
+</div>
+
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container hero-wrap">
+    <div class="reveal">
+      <span class="chip">Innovando por un mundo más inclusivo</span>
+      <h1 class="h1">KID IA:</h1>
+      <h1 class="h1">Aplicación Movil Impulsada por IA para Pacientes con TEA</h1>
+      <p class="lead">Actividades interactivas, acompañamiento y reportes claros para familias y profesionales. Diseñada con evidencia y mucho corazón.</p>
+      <div style="display:flex; gap:12px; margin-top:18px">
+        <a class="btn btn-primary" href="#pricing">Ver planes</a>
+        <a class="btn btn-ghost" href="#features">Explorar funciones</a>
+      </div>
+      <div class="award">
+        🏅 <b>Grand Prize and Gold Winner</b> · WICO 2025, Seúl, Corea del Sur
+      </div>
+    </div>
+
+    <div class="glass hero-card reveal" id="parallaxBox">
+    <img class="hero-ill" src="assets/hero-kidia.png" alt="Ilustración KID-IA" />
+    <!-- blobs parallax (los puedes dejar) -->
+    <div class="blob b1" data-depth="8"></div>
+    <div class="blob b2" data-depth="-6"></div>
+    <div class="blob b3" data-depth="10"></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features" class="section features">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:18px">
+      <h2 style="margin:0;font-size:clamp(26px,3vw,36px)">Beneficios clave</h2>
+      <p class="lead">Resultados medibles a través de juego, ciencia y acompañamiento.</p>
+    </div>
+    <div class="grid">
+      <div class="glass feature reveal">
+        <div class="icon">📱</div>
+        <h3 style="margin:.4rem 0 0">Ejercicios Interactivos</h3>
+        <p class="muted">Trazos, reconocimiento, rutinas y dinámica motora adaptadas.</p>
+      </div>
+      <div class="glass feature reveal">
+        <div class="icon">🧠</div>
+        <h3 style="margin:.4rem 0 0">Aprendizaje Personalizado</h3>
+        <p class="muted">La IA ajusta dificultad, ritmo y reforzadores para cada persona.</p>
+      </div>
+      <div class="glass feature reveal">
+        <div class="icon">🤝</div>
+        <h3 style="margin:.4rem 0 0">Acompañamiento Virtual</h3>
+        <p class="muted">Guías empáticas, registro de avances y sugerencias automáticas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" class="section how">
+  <div class="container">
+    <h2 class="reveal" style="margin:0 0 18px;font-size:clamp(26px,3vw,36px)">Cómo funciona</h2>
+    <div class="grid">
+      <div class="glass step reveal"><b>1. Evalúa</b><p class="muted">Cuestionarios breves para objetivos claros.</p></div>
+      <div class="glass step reveal"><b>2. Practica</b><p class="muted">Actividades guiadas con refuerzos.</p></div>
+      <div class="glass step reveal"><b>3. Mide y Ajusta</b><p class="muted">Reportes por áreas y recomendaciones.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<!-- MODULES -->
+<section id="modules" class="section modules">
+  <div class="container">
+    <h2 class="reveal" style="margin:0 0 18px;font-size:clamp(26px,3vw,36px)">Áreas de Oportunidad</h2>
+
+    <div class="grid">
+      <!-- Comunicación -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/comunicacion.jpg" alt="Comunicación">
+        </div>
+        <div class="module-info">
+          <h4>Comunicación</h4>
+          <p>PECS, vocabulario funcional, turnos conversacionales.</p>
+        </div>
+        <div class="ia-badge">IA</div>
+      </div>
+
+      <!-- Lenguaje -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/lenguaje.png" alt="Lenguaje">
+        </div>
+        <div class="module-info">
+          <h4>Lenguaje</h4>
+          <p>Producción y comprensión, articulación y semántica.</p>
+        </div>
+        <div class="ia-badge">IA</div>
+      </div>
+
+      <!-- Autonomía -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/autonomia.png" alt="Autonomía">
+        </div>
+        <div class="module-info">
+          <h4>Autonomía</h4>
+          <p>Rutinas, secuencias y hábitos para la vida diaria.</p>
+        </div>
+        <div class="ia-badge">IA</div>
+      </div>
+
+      <!-- Educacional -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/educacional.png" alt="Educacional">
+        </div>
+        <div class="module-info">
+          <h4>Educacional</h4>
+          <p>Trazos, lectoescritura inicial y actividades guiadas.</p>
+        </div>
+        <div class="ia-badge">IA</div>
+      </div>
+
+      <!-- Emociones -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/emociones.png" alt="Emociones">
+        </div>
+        <div class="module-info">
+          <h4>Emociones</h4>
+          <p>Identificación y regulación con apoyos visuales.</p>
+        </div>
+        <div class="ia-badge" style="background:linear-gradient(135deg,#6d6cfb,#7a64ff)">IA</div>
+      </div>
+
+      <!-- Comprensión -->
+      <div class="module-card reveal">
+        <div class="module-icon">
+          <img src="assets/modules/comprension.jpg" alt="Comprensión">
+        </div>
+        <div class="module-info">
+          <h4>Comprensión</h4>
+          <p>Historias, instrucciones y razonamiento verbal.</p>
+        </div>
+        <div class="ia-badge" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed)">IA</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- AWARD BAR -->
+<section class="section" style="padding-top:0">
+  <div class="container glass reveal" style="padding:22px; display:flex; gap:18px; align-items:center; justify-content:space-between; flex-wrap:wrap">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <span style="font-size:28px">🏆</span>
+      <div><strong>Grand Prize · WICO 2025</strong><div class="muted" style="font-size:.92rem">Reconocimiento internacional a innovación educativa</div></div>
+    </div>
+    <span class="chip">Calidad y evidencia</span>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section pricing">
+  <div class="container">
+    <h2 class="reveal" style="margin:0 0 18px;font-size:clamp(26px,3vw,36px)">Planes simples</h2>
+    <p class="lead reveal">Precios por usuario/mes. (Botones informativos por ahora)</p>
+
+    <div class="grid">
+      <div class="glass plan reveal">
+        <h3 style="margin:0 0 6px">Básico</h3>
+        <div><strong>$99 MXN</strong> <span class="muted">/mes</span></div>
+        <ul class="muted" style="line-height:1.7">
+          <li>Acceso a IA básica</li><li>Hasta 5 asistentes</li><li>Soporte por email</li>
+        </ul>
+        <a class="btn btn-ghost" href="#cta">Elegir plan</a>
+      </div>
+
+      <div class="glass plan reveal" style="border-color:#cfe0ff">
+        <span class="badge">MÁS POPULAR</span>
+        <h3 style="margin:0 0 6px">Profesional</h3>
+        <div><strong>$199 MXN</strong> <span class="muted">/mes</span></div>
+        <ul class="muted" style="line-height:1.7">
+          <li>Todo en Básico, y más…</li><li>Accesibilidad</li><li>Analíticas básicas</li><li>Soporte prioritario</li>
+        </ul>
+        <a class="btn btn-primary" href="#cta">Elegir plan</a>
+      </div>
+
+      <div class="glass plan reveal">
+        <h3 style="margin:0 0 6px">Avanzado</h3>
+        <div><strong>$399 MXN</strong> <span class="muted">/mes</span></div>
+        <ul class="muted" style="line-height:1.7">
+          <li>Todo en Profesional, y más…</li><li>Asistentes ilimitados</li><li>IA generativa</li><li>Soporte 24/7</li>
+        </ul>
+        <a class="btn btn-ghost" href="#cta">Elegir plan</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section testi">
+  <div class="container">
+    <h2 class="reveal" style="margin:0 0 18px;font-size:clamp(26px,3vw,36px)">Lo que dicen</h2>
+    <div class="grid">
+      <div class="glass quote reveal"><div class="stars">★★★★★</div><p>“Mi hijo ahora espera su tiempo con KID-IA.”</p><span class="muted">— Madre de Santiago</span></div>
+      <div class="glass quote reveal"><div class="stars">★★★★★</div><p>“Reportes claros y ajustes automáticos. Súper útil.”</p><span class="muted">— Terapeuta ocupacional</span></div>
+      <div class="glass quote reveal"><div class="stars">★★★★★</div><p>“Una herramienta práctica para casa y escuela.”</p><span class="muted">— Familia Hernández</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta" class="section cta">
+  <div class="container">
+    <div class="inner reveal">
+      <div>
+        <h2 style="margin:0 0 6px;font-size:clamp(24px,3vw,32px)">¿Listos para comenzar?</h2>
+        <p style="margin:0 0 12px; color:#e6efff">Instala la app, crea un perfil y prueba actividades gratuitas.</p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap">
+          <a class="btn" style="background:#fff;color:var(--blue);border:1px solid #e6eeff" href="#">Descargar iOS</a>
+          <a class="btn" style="background:#fff;color:var(--blue);border:1px solid #e6eeff" href="#">Descargar Android</a>
+        </div>
+      </div>
+      <div class="glass" style="padding:18px; color:var(--ink); background:#ffffffd9">
+        <strong>Soporte</strong>
+        <p class="muted" style="margin:8px 0 0">¿Dudas? Escríbenos a <a href="mailto:soporte@kidia.app">soporte@kidia.app</a></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer style="padding:44px 0; border-top:1px solid #e6eeff; color:var(--muted)">
+  <div class="container" style="display:grid; grid-template-columns:1fr auto; gap:20px; align-items:center">
+    <div>
+      <strong style="color:var(--blue)">KID-IA</strong> · Innovando por un mundo más inclusivo
+      <div style="font-size:.92rem">© <span id="y"></span> KID-IA. Todos los derechos reservados.</div>
+    </div>
+    <div style="display:flex; gap:16px">
+      <a class="muted" href="#">Privacidad</a>
+      <a class="muted" href="#">Términos</a>
+      <a class="muted" href="#">Contacto</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // año
+  document.getElementById('y').textContent = new Date().getFullYear();
+
+  // scroll suave
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click', e=>{
+      const el = document.querySelector(a.getAttribute('href'));
+      if(el){ e.preventDefault(); el.scrollIntoView({behavior:'smooth'}); }
+    });
+  });
+
+  // IntersectionObserver para reveal
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(ent=>{
+      if(ent.isIntersecting){ ent.target.classList.add('show'); io.unobserve(ent.target); }
+    })
+  }, {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+
+  // Parallax sencillo de blobs dentro de #parallaxBox
+  const box = document.getElementById('parallaxBox');
+  const blobs = box ? box.querySelectorAll('[data-depth]') : [];
+  if(box){
+    box.addEventListener('pointermove', (e)=>{
+      const r = box.getBoundingClientRect();
+      const x = (e.clientX - (r.left + r.width/2)) / (r.width/2);
+      const y = (e.clientY - (r.top + r.height/2)) / (r.height/2);
+      blobs.forEach(b=>{
+        const d = parseFloat(b.dataset.depth||'6');
+        b.style.transform = `translate(${x*d}px, ${y*d}px)`;
+      });
+    });
+    box.addEventListener('pointerleave', ()=>blobs.forEach(b=>b.style.transform='translate(0,0)'));
+  }
+  const menuBtn   = document.getElementById('menuBtn');
+  const headerEl  = document.querySelector('header');
+
+  if(menuBtn){
+    menuBtn.addEventListener('click', ()=> headerEl.classList.toggle('open'));
+    // cerrar si tocan fuera
+    document.addEventListener('click', (e)=>{
+      if(!headerEl.contains(e.target)) headerEl.classList.remove('open');
+    });
+  }
+
+</script>
 </body>
 </html>
